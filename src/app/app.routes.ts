@@ -26,6 +26,10 @@ export const routes: Routes = [
             {
                 path: 'depreciationById/:depreciationIdD',
                 loadComponent: () => import('./domains/depreciations/components/depreciation-modal/depreciation-modal.component')
+            },
+            {
+                path: 'responsible',
+                loadComponent: () => import('./domains/persons/pages/person/person.component')
             },            
         ]
     },

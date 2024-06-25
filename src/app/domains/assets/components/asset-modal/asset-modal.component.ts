@@ -120,7 +120,6 @@ export default class AssetModalComponent implements OnInit, OnDestroy {
     this.assetService.updateAsset(assetIdD, this.assetForm.value)
       .subscribe({
         next: (response: any) => {
-          console.log(response);
           alert('Asset updated successfully');
           this.toggle(false);
         },

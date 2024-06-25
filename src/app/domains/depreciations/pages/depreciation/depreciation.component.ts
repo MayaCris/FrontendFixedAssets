@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, SimpleChanges, inject, signal } from '@angular/core';
 import { Depreciation } from '@shared/models/depreciation.model';
 import { ModalService } from '@shared/services/modal.service';
-import { AssetService } from '@shared/services/asset.service';
 import { DepreciationService } from '@shared/services/depreciation.service';
 import { RouterLinkWithHref } from '@angular/router';
 import AssetModalComponent from '@assets/components/asset-modal/asset-modal.component';
@@ -18,8 +17,6 @@ import { Subscription } from 'rxjs';
 })
 export default class DepreciationComponent {
 
-  @Input({ required: true }) depreciation!: Depreciation;
-
   depreciations = signal<Depreciation[]>([]);
   private subscription: Subscription = new Subscription();
 
@@ -31,7 +28,7 @@ export default class DepreciationComponent {
     this.subscribeToDepreciationForm();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     this.getDepreciations();
   }
 
@@ -70,7 +67,7 @@ export default class DepreciationComponent {
   }
   
 
-  deleteDepreciation(depreciationIdD: number) {
+  deleteDepreciation(depreciationIdD: number): void {
     if (confirm('Are you sure you want to delete this depreciation?')) {
       this.depreciationService.deleteDepreciation(depreciationIdD)
         .subscribe({

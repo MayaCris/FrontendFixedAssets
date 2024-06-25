@@ -70,6 +70,10 @@ export class AssetService {
     );
   }
 
+  /**
+   * Obtiene todos los activos fijos ordenados por fecha de adquisición.
+   * @returns Observable con la lista de activos fijos ordenados por fecha de adquisición.
+  **/
   getAssetsOrderByDate(): Observable<Asset[]> {
     const url = new URL(`${this.apiUrl}/allOrderByAcquisitionDate`).toString()
     return this.http.get<Asset[]>(url)
@@ -86,7 +90,9 @@ export class AssetService {
   getAssetById (assetIdD: number): Observable<Asset> {
     const url = new URL(`${this.apiUrl}/findById/${assetIdD}`).toString();
     return this.http.get<Asset[]>(url)
-    .pipe(map((asset) => asset[0]), catchError(this.handleError)
+    .pipe(
+      map((asset) => asset[0]), 
+      catchError(this.handleError)
     );
   }
 

@@ -99,9 +99,11 @@ export default class ListComponent {
   }
 
   editAsset(assetId: number): void {
-    this.assetService.getAssetById(assetId).subscribe((asset) => {
-      this.assetService.updateAssetForm(asset);
-    })
+    this.assetService.getAssetById(assetId)
+      .subscribe(
+        (asset) => {
+          this.assetService.updateAssetForm(asset);
+        })
   }
 
   openModalDepreciation() {
