@@ -4,7 +4,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLinkWithHref } from '@angular/router';
 import { ModalService } from '@shared/services/modal.service';
 import { PersonService } from '@shared/services/person.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, catchError, map, of } from 'rxjs';
 
 @Component({
   selector: 'app-person-modal',
@@ -42,28 +42,62 @@ export class PersonModalComponent {
     );
   }
 
-  savePerson() {
-    if(this.personForm.valid) {
-      try {
-        if(this.personForm.get('personIdD')?.value) {
-          this.updatePerson();
-        } else {
-          this.personService.savePerson(this.personForm.value)
-            .subscribe({
-              next: () => {
-                alert('Person created successfully');
-                this.toggle(false);
-              },
-              error: (error) => {
-                console.error('Error creating person: ', error);
-              }
-            });
-        }
-      } catch (error) {
-        console.error('Error creating person: ', error);
-      }
+  getPersonbyId(personIdD: string) {
+    if (personIdD) {
+      this.personService.getPersonById(personIdD)
+        .subscribe({
+          next: (person) => {
+            this.personService.updatePersonForm(person);
+          },
+          error: (error) => {
+            console.error('Error getting person by id: ', error);
+          }
+        });
     }
   }
+
+  savePerson() {
+    if (this.personForm.valid) {
+      this.validatePersonExists(this.personForm.get('personIdD')?.value)
+        .subscribe({
+          next: (exists) => {
+            if (exists) {
+              this.updatePerson();
+            } else {
+              this.personService.savePerson(this.personForm.value)
+                .subscribe({
+                  next: () => {
+                    alert('Person created successfully');
+                    this.toggle(false);
+                  },
+                  error: (error) => {
+                    console.error('Error creating person: ', error);
+                  }
+                });
+            }
+          }
+        })
+    }
+  }
+
+
+  validatePersonExists(personId: string): Observable<boolean> {
+    return this.personService.getPersonById(personId)
+      .pipe(
+        map(person => {
+          if (person) {
+            return true;
+          } else {
+            return false;
+          }
+        }),
+        catchError(error => {
+          console.error('Error getting person by id: ', error);
+          return of(false);
+        })
+      );
+  }
+
 
   updatePerson() {
     const personId = this.personForm.get('personIdD')?.value;

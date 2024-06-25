@@ -62,19 +62,19 @@ export default class AssetModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAssetById(assetIdD: number) {
-    if (assetIdD) {
-      this.assetService.getAssetById(assetIdD)
-        .subscribe({
-          next: (asset) => {
-            this.assetService.updateAssetForm(asset);
-          },
-          error: (error) => {
-            console.error(error);
-          }
-        })
-    }
-  }
+  // getAssetById(assetIdD: number) {
+  //   if (assetIdD) {
+  //     this.assetService.getAssetById(assetIdD)
+  //       .subscribe({
+  //         next: (asset) => {
+  //           this.assetService.updateAssetForm(asset);
+  //         },
+  //         error: (error) => {
+  //           console.error(error);
+  //         }
+  //       })
+  //   }
+  // }
 
   toggle(open: boolean): void {
     this.modalService.toggleModal(this.modalId, open);
@@ -117,9 +117,10 @@ export default class AssetModalComponent implements OnInit, OnDestroy {
 
   updateAsset() {
     const assetIdD = this.assetForm.get('assetIdD')?.value;
+    console.log("id para actualizar", assetIdD)
     this.assetService.updateAsset(assetIdD, this.assetForm.value)
       .subscribe({
-        next: (response: any) => {
+        next: () => {
           alert('Asset updated successfully');
           this.toggle(false);
         },
